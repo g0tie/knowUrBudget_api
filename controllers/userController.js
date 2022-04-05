@@ -36,6 +36,8 @@ exports.addExpense = async (req, res) => {
         });
 
         if (!expenses) return res.status(400).send({message: "Error, could not add expense"});
+
+        return res.status(200).send({message: "Expense added"});
         
     } catch (e) {
         return res.status(500).send({message: `Error has occured ${e}`});
@@ -44,6 +46,14 @@ exports.addExpense = async (req, res) => {
 
 exports.getLimit = async (req, res) => {
     try {
+        const userId = await jwt.verify(req.session.token, config.secret).id;
+        const limit = Limit.findOne({
+            where: {
+                userId
+            }
+        });
+
+        return res.status(200).send({message: "success" , limit});
 
     } catch (e) {
         return res.status(500).send({message: `Error has occured ${e}`});
@@ -52,6 +62,19 @@ exports.getLimit = async (req, res) => {
 
 exports.setLimit = async (req, res) => {
     try {
+        const newLimit = req.body.limit;
+
+        if (!newLimit && Number.isInteger(newLimit) ) return res.status(400).send({message: "Cannot update limit"});
+
+        const limit = Limit.update({amount: newLimit}, {
+            where: {
+                userId
+            }
+        });
+
+        if (!limit) return res.status(400).send({message: "Error, please enter correct limit"});
+
+        return res.status(200).send({message: "Limit updated !"})
 
     } catch (e) {
         return res.status(500).send({message: `Error has occured ${e}`});
