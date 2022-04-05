@@ -32,4 +32,4 @@ app.get("/", (req, res) => res.json("Welcome to authenticator API") );
 
 //Config
 const PORT = process.env.PORT || 8000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`) );
+app.listen(PORT, () => console.log(`Server running on port ${PORT}\n`) );
