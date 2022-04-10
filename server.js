@@ -4,7 +4,7 @@ const cookieSession = require("cookie-session");
 const app = express();
 const authRouter = require('./routes/authRouter');
 const ressourcesRouter = require('./routes/ressourcesRouter');
-const userRouter = requrie("./routes/userRouter");
+const userRouter = require("./routes/userRouter");
 
 //config database
 const db = require("./app/models");

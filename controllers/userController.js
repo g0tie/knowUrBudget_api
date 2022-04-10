@@ -3,6 +3,7 @@ const User = db.user;
 const Expense = db.expense;
 const Limit = db.limit;
 const config = require('../app/config/auth.js');
+const jwt = require("jsonwebtoken");
 
 exports.getExpenses = async (req, res) => {
     try {
@@ -12,14 +13,14 @@ exports.getExpenses = async (req, res) => {
             where: {
                 userId,
                 ...(type) && { type },
-                limit: 10,
-            }
+            },
+            limit: 10
         });
 
-        return res.status(200).send({message: "Expenses found", expenses});
+        return res.status(200).send({expenses});
 
     } catch (e) {
-        return res.status(500).send({message: `Error has occured: ${e}`});
+        return res.status(500).send({message: `Server error occurred`});
     }
 }
 
@@ -62,7 +63,7 @@ exports.getLimit = async (req, res) => {
 
 exports.setLimit = async (req, res) => {
     try {
-        const newLimit = req.body.limit;
+        const newLimit = parseInt( req.body.limit );
 
         if (!newLimit && Number.isInteger(newLimit) ) return res.status(400).send({message: "Cannot update limit"});
 

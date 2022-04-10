@@ -43,7 +43,7 @@ exports.signin = async (req, res) => {
         });
 
     } catch (e) {
-        return res.status(500).send({message: e.message});
+        return res.status(500).send({message: "Invalid credentials"});
     }
 }
 

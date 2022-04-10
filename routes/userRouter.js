@@ -4,11 +4,10 @@ const controller = require('../controllers/userController.js');
 
 router.use(jwtAuth.verifyToken);
 
-
-router.get('/expenses');
-router.post('/expenses');
-router.post('/limit');
-router.update('/limit');
+router.get('/expenses', controller.getExpenses);
+router.post('/expenses', controller.addExpense);
+router.get('/limit', controller.getLimit);
+router.put('/limit', controller.setLimit);
 
 
 module.exports = router;

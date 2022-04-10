@@ -23,10 +23,13 @@ db.sequelize = sequelize;
 db.user = require("./User.js")(sequelize, Sequelize);
 db.expense = require("./Expense.js")(sequelize, Sequelize);
 db.limit = require("./Limit.js")(sequelize, Sequelize);
+db.type = require("./Type.js")(sequelize, Sequelize);
+
 
 //Relations
 db.user.hasOne(db.limit);
 db.user.hasMany(db.expense);
+db.type.hasMany(db.expense)
 
 module.exports = db;
 
