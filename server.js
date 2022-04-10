@@ -8,7 +8,6 @@ const userRouter = require("./routes/userRouter");
 
 //config database
 const db = require("./app/models");
-
 //middlewares
 app.use(cors());
 app.use(express.json());
