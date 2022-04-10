@@ -3,7 +3,6 @@ module.exports = (sequelize, Sequelize) => {
 		"expenses", 
 		{
 			name : { type: Sequelize.STRING },
-			type: { type: Sequelize.STRING },
 			amount: { type: Sequelize.DECIMAL },
 			date: { type: Sequelize.DATE },
 		}

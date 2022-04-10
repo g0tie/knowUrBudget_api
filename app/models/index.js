@@ -2,6 +2,9 @@
 
 const config = require("../config/db.js");
 const Sequelize = require("sequelize");
+const Expense = require('./Expense');
+const Type = require('./Type');
+
 
 const sequelize = new Sequelize(
 	config.DB,
@@ -27,9 +30,16 @@ db.type = require("./Type.js")(sequelize, Sequelize);
 
 
 //Relations
-db.user.hasOne(db.limit);
+db.user.hasOne(db.limit, {
+	foreignKey: "userId"
+});
+db.limit.belongsTo(db.user);
+
 db.user.hasMany(db.expense);
-db.type.hasMany(db.expense)
+db.type.hasMany(db.expense, {
+	foreignKey: 'typeId',
+});
+db.expense.belongsTo(db.type);
 
 module.exports = db;
 

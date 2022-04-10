@@ -11,6 +11,8 @@ exports.signup = async (req, res) => {
             email: req.body.email,
             password: bcrypt.hashSync( req.body.password, 8 )
         });
+
+        await user.save();
         
         if (user) res.status(200).send({message: "Registration successful"});
     } catch (e) {
@@ -26,7 +28,7 @@ exports.signin = async (req, res) => {
             }
         });
 
-        if (!user) return res.status(404).send({message: "User not found"}); 
+        if ( !user)  return res.status(404).send({message: "User not found"}); 
 
         const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
 

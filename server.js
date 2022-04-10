@@ -8,8 +8,6 @@ const userRouter = require("./routes/userRouter");
 
 //config database
 const db = require("./app/models");
-db.sequelize.sync({force:true})
-.then(() => console.log("Sync db"));
 
 //middlewares
 app.use(cors());

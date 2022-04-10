@@ -6,8 +6,12 @@ router.use(jwtAuth.verifyToken);
 
 router.get('/expenses', controller.getExpenses);
 router.post('/expenses', controller.addExpense);
+router.put('/expenses', controller.updateExpense);
+router.delete('/expenses', controller.deleteExpense);
+
+
 router.get('/limit', controller.getLimit);
-router.put('/limit', controller.setLimit);
+router.post('/limit', controller.setLimit);
 
 
 module.exports = router;

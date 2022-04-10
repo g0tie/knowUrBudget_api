@@ -1,18 +1,19 @@
 const db = require("../app/models");
 const User = db.user;
 const Expense = db.expense;
+const Type = db.type;
 const Limit = db.limit;
 const config = require('../app/config/auth.js');
 const jwt = require("jsonwebtoken");
 
 exports.getExpenses = async (req, res) => {
     try {
-        const type = req.body.type || false;
+        const typeId = req.body.typeId || false;
         const userId = await jwt.verify(req.session.token, config.secret).id;
         const expenses = await Expense.findAll({
             where: {
                 userId,
-                ...(type) && { type },
+                ...(typeId) && { typeId },
             },
             limit: 10
         });
@@ -27,14 +28,15 @@ exports.getExpenses = async (req, res) => {
 exports.addExpense = async (req, res) => {
     try {
         const userId = await jwt.verify(req.session.token, config.secret).id;
-        const date = new Date();
-        const expenses = Expense.create({
+        const date = await new Date();
+        const expenses = await Expense.create({
             userId,
             name: req.body.name,
-            type: req.body.type,
             amount: req.body.amount,
             date: date.toISOString()
         });
+        const type = await Type.findOne({id: req.body.typeId});
+        await expenses.setType(type);
 
         if (!expenses) return res.status(400).send({message: "Error, could not add expense"});
 
@@ -45,14 +47,48 @@ exports.addExpense = async (req, res) => {
     }
 }
 
+exports.deleteExpense = async (req, res) => {
+    try {
+        const userId = await jwt.verify(req.session.token, config.secret).id;
+        const expense = await Expense.findOne({id: req.body.expenseId, userId});
+        let success = await expense.destroy();
+
+        if (success) return res.status(200).send({message: "Expense deleted"});
+
+    } catch(e) {
+      return res.status(200).send({message: "Error cannot delete"});
+
+    }
+}
+
+exports.updateExpense = async (req, res) => {
+    try {
+        const userId = await jwt.verify(req.session.token, config.secret).id;
+        const expense = await Expense.findOne({id: req.body.expenseId, userId});
+
+        await expense.set(req.body);
+        await expense.save();
+
+        if (expense) return res.status(200).send({message: "Expense updated"});
+
+
+    } catch(e) {
+      return res.status(200).send({message: "Error cannot update"});
+        
+    }
+}
+
 exports.getLimit = async (req, res) => {
     try {
         const userId = await jwt.verify(req.session.token, config.secret).id;
-        const limit = Limit.findOne({
+       
+        const limit = await Limit.findOne({
             where: {
                 userId
             }
         });
+
+        !limit && res.send({message:"No limit found for user"});
 
         return res.status(200).send({message: "success" , limit});
 
@@ -63,19 +99,32 @@ exports.getLimit = async (req, res) => {
 
 exports.setLimit = async (req, res) => {
     try {
-        const newLimit = parseInt( req.body.limit );
+        const newLimit = await parseInt( req.body.limit );
+        const userId = await jwt.verify(req.session.token, config.secret).id;
 
         if (!newLimit && Number.isInteger(newLimit) ) return res.status(400).send({message: "Cannot update limit"});
 
-        const limit = Limit.update({amount: newLimit}, {
-            where: {
+        
+        const limit = await Limit.findOne({
+            where : {
                 userId
             }
         });
+        
+        if (!limit) {
+            let createLimit = await Limit.create({
+                amount: newLimit,
+            });
+            const user = await User.findOne( {id: userId });
+            await createLimit.setUser(user);
 
-        if (!limit) return res.status(400).send({message: "Error, please enter correct limit"});
+            return res.status(200).send({message: "Limit created"});
+        } else {
 
-        return res.status(200).send({message: "Limit updated !"})
+            limit.amount = await newLimit;
+            await limit.save();
+            return res.status(200).send({message: "Limit updated"});
+        }
 
     } catch (e) {
         return res.status(500).send({message: `Error has occured ${e}`});
