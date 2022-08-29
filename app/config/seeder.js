@@ -32,9 +32,14 @@ async function init() {
            
         
         ]);
+     
+        await db.roles.bulkCreate([
+            {id:0, name: "parent"},
+            {id: 1, name: "child"}
+        ]);
+
         await console.log("Types inserted"); 
         await process.exit();
-
     } catch(e) {
         console.error(e);
     }

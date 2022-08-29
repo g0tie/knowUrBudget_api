@@ -5,6 +5,40 @@ const Type = db.type;
 const Limit = db.limit;
 const config = require('../app/config/auth.js');
 const jwt = require("jsonwebtoken");
+const Role = require("../app/models/Role");
+const { Op } = require("sequelize");
+
+exports.getChildrenAccount = async (req, res) => {
+    try {
+        const userId = await jwt.verify(req.session.token, config.secret).id;
+        const children = await User.findAll({
+            where: {
+                parent_id: userId
+            }
+        })
+
+        return res.status(200).send(children);
+        
+    } catch (e) {
+        return res.status(500).send({message: `Cannot get user role`});
+    }
+}
+
+exports.getRole = async (req, res) => {
+    try {
+        const userId = await jwt.verify(req.session.token, config.secret).id;
+        const user = await User.findOne({userId});
+        const role = await user.getRoles({
+            where: {
+                id: user.role_id
+            }
+        });
+
+        return res.status(200).send({role});
+    } catch (e) {
+        return res.status(500).send({message: `Cannot get user role`});
+    }
+}
 
 exports.getExpenses = async (req, res) => {
     try {

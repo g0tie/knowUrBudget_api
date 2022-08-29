@@ -13,5 +13,8 @@ router.delete('/expenses', controller.deleteExpense);
 router.get('/limit', controller.getLimit);
 router.post('/limit', controller.setLimit);
 
+router.get('/role', controller.getRole);
+router.get('/children', controller.getChildrenAccount);
+
 
 module.exports = router;
