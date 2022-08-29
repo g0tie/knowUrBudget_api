@@ -8,6 +8,29 @@ const jwt = require("jsonwebtoken");
 const Role = require("../app/models/Role");
 const { Op } = require("sequelize");
 
+
+exports.getDatas = (req, res) => {
+    try {
+        const userId = await jwt.verify(req.session.token, config.secret).id;
+        const user = await User.findOne({id: req.body.userId});
+        const res = {
+            limit: user.getLimits(),
+            expenses: user.getExpenses(),
+            user: {name: user.firstname},
+            childrenAccounts:  await User.findAll({
+                where: {
+                    parent_id: req.body.userId
+                }
+            })
+        };
+
+        return res.status(200).send(res);
+        
+    } catch (e) {
+        return res.status(500).send({message: `Cannot get user role`});
+    }
+}
+
 exports.getChildrenAccount = async (req, res) => {
     try {
         const userId = await jwt.verify(req.session.token, config.secret).id;

@@ -15,6 +15,8 @@ router.post('/limit', controller.setLimit);
 
 router.get('/role', controller.getRole);
 router.get('/children', controller.getChildrenAccount);
+router.get('/datas', controller.getDatas);
+
 
 
 module.exports = router;
