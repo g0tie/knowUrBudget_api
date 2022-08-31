@@ -9,9 +9,8 @@ const Role = require("../app/models/Role");
 const { Op } = require("sequelize");
 
 
-exports.getDatas = (req, res) => {
+exports.getDatas = async (req, res) => {
     try {
-        const userId = await jwt.verify(req.session.token, config.secret).id;
         const user = await User.findOne({id: req.body.userId});
         const res = {
             limit: user.getLimits(),
