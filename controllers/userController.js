@@ -11,14 +11,12 @@ const { Op } = require("sequelize");
 
 exports.getDatas = async (req, res) => {
     try {
-        const user = await User.findOne({id: req.body.userId});
-        const res = {
-            limit: user.getLimits(),
-            expenses: user.getExpenses(),
-            user: {name: user.firstname},
-        };
+        const user = await User.findOne({id: req.userId, include: [
+            {model: Expense},
+            {model: Limit}
+        ]});
 
-        return res.status(200).send(res);
+        return res.status(200).send(user);
         
     } catch (e) {
         return res.status(500).send({message: e});
