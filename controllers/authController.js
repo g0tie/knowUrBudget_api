@@ -28,7 +28,7 @@ exports.signup = async (req, res) => {
         );
         await user.save();
 
-        if (user) res.status(200).send({message: "Registration successful", token: token});
+        if (user) res.status(200).send({message: "Registration successful", token: JSON.stringify(token)});
     } catch (e) {
         return res.status(500).send({message: e.message});
     }
