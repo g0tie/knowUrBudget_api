@@ -3,6 +3,7 @@ const config = require("../app/config/auth");
 const User = db.user;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const Limit = db.limit;
 
 exports.signup = async (req, res) => {
     try {
@@ -10,6 +11,12 @@ exports.signup = async (req, res) => {
             username: req.body.username,
             email: req.body.email,
             password: bcrypt.hashSync( req.body.password, 8 ),
+            limit: 500
+        }, { 
+            include: [{
+                association:  User.associations.limit,
+                as: 'limit'
+            }]
         });
 
         const token = await jwt.sign(
