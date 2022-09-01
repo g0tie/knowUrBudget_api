@@ -16,56 +16,19 @@ exports.getDatas = async (req, res) => {
             limit: user.getLimits(),
             expenses: user.getExpenses(),
             user: {name: user.firstname},
-            childrenAccounts:  await User.findAll({
-                where: {
-                    parent_id: req.body.userId
-                }
-            })
         };
 
         return res.status(200).send(res);
         
     } catch (e) {
-        return res.status(500).send({message: `Cannot get user role`});
-    }
-}
-
-exports.getChildrenAccount = async (req, res) => {
-    try {
-        const userId = await jwt.verify(req.session.token, config.secret).id;
-        const children = await User.findAll({
-            where: {
-                parent_id: userId
-            }
-        })
-
-        return res.status(200).send(children);
-        
-    } catch (e) {
-        return res.status(500).send({message: `Cannot get user role`});
-    }
-}
-
-exports.getRole = async (req, res) => {
-    try {
-        const userId = await jwt.verify(req.session.token, config.secret).id;
-        const user = await User.findOne({userId});
-        const role = await user.getRoles({
-            where: {
-                id: user.role_id
-            }
-        });
-
-        return res.status(200).send({role});
-    } catch (e) {
-        return res.status(500).send({message: `Cannot get user role`});
+        return res.status(500).send({message: e});
     }
 }
 
 exports.getExpenses = async (req, res) => {
     try {
         const typeId = req.body.typeId || false;
-        const userId = await jwt.verify(req.session.token, config.secret).id;
+        const userId = req.userId;
         const expenses = await Expense.findAll({
             where: {
                 userId,
@@ -83,7 +46,7 @@ exports.getExpenses = async (req, res) => {
 
 exports.addExpense = async (req, res) => {
     try {
-        const userId = await jwt.verify(req.session.token, config.secret).id;
+        const userId = req.userId;
         const date = await new Date();
         const expenses = await Expense.create({
             userId,
@@ -105,7 +68,7 @@ exports.addExpense = async (req, res) => {
 
 exports.deleteExpense = async (req, res) => {
     try {
-        const userId = await jwt.verify(req.session.token, config.secret).id;
+        const userId = req.userId;
         const expense = await Expense.findOne({id: req.body.expenseId, userId});
         let success = await expense.destroy();
 
@@ -119,7 +82,7 @@ exports.deleteExpense = async (req, res) => {
 
 exports.updateExpense = async (req, res) => {
     try {
-        const userId = await jwt.verify(req.session.token, config.secret).id;
+        const userId = req.userId;
         const expense = await Expense.findOne({id: req.body.expenseId, userId});
 
         await expense.set(req.body);
@@ -136,7 +99,7 @@ exports.updateExpense = async (req, res) => {
 
 exports.getLimit = async (req, res) => {
     try {
-        const userId = await jwt.verify(req.session.token, config.secret).id;
+        const userId = req.userId;
        
         const limit = await Limit.findOne({
             where: {
@@ -156,7 +119,7 @@ exports.getLimit = async (req, res) => {
 exports.setLimit = async (req, res) => {
     try {
         const newLimit = await parseInt( req.body.limit );
-        const userId = await jwt.verify(req.session.token, config.secret).id;
+        const userId = req.userId;
 
         if (!newLimit && Number.isInteger(newLimit) ) return res.status(400).send({message: "Cannot update limit"});
 
@@ -186,3 +149,21 @@ exports.setLimit = async (req, res) => {
         return res.status(500).send({message: `Error has occured ${e}`});
     }
 }
+
+exports.renew = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const token = await jwt.sign({id: userId, }, config.secret, { expiresIn: "7d" });
+
+        return res.status(200).send({
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            token
+        });
+        
+    } catch (e) {
+        return res.status(500).send({message: e});
+    }
+}
+

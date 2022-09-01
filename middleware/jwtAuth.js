@@ -4,8 +4,8 @@ const db = require("../app/models");
 const User = db.user;
 
 verifyToken = (req, res, next) => {
-	let token = req.session.token;
-
+	const token = req.body.token || req.query.token || req.headers["x-access-token"];
+	
 	if (!token) return res.status(403).send({message: "Unauthorized ! No token found"});
 	
 	jwt.verify(token, config.secret, (err, decoded) => {

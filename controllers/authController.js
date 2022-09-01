@@ -10,13 +10,18 @@ exports.signup = async (req, res) => {
             username: req.body.username,
             email: req.body.email,
             password: bcrypt.hashSync( req.body.password, 8 ),
-            parent_id: req.body.parent_id ?  req.body.parent_id : null,
-            role_id: req.body.parent_id ? 1 : 0
         });
 
+        const token = await jwt.sign(
+            { id: user.id,  },
+            config.secret,
+            {
+              expiresIn: "7d",
+            }
+        );
         await user.save();
-        
-        if (user) res.status(200).send({message: "Registration successful"});
+
+        if (user) res.status(200).send({message: "Registration successful", token: token});
     } catch (e) {
         return res.status(500).send({message: e.message});
     }
@@ -36,26 +41,16 @@ exports.signin = async (req, res) => {
 
         if (!passwordIsValid) return res.status(401).send({message: "Password is invalid"});
     
-        const token = jwt.sign({id: user.id, }, config.secret, { expiresIn: 86400 /*24h*/ });
-
-        req.session.token = token;
+        const token = jwt.sign({id: user.id, }, config.secret, { expiresIn: "7d" });
 
         return res.status(200).send({
             id: user.id,
             username: user.username,
-            email: user.email
+            email: user.email,
+            token
         });
 
     } catch (e) {
         return res.status(500).send({message: "Invalid credentials"});
-    }
-}
-
-exports.signout = async (req, res) => {
-    try {
-        req.session = null;
-        return res.status(200).send({message: "You are now disconnected"});
-    } catch (e) {
-        return res.status(500).send({message: e.message});
     }
 }

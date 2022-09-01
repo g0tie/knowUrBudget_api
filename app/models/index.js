@@ -23,17 +23,12 @@ db.user = require("./User.js")(sequelize, Sequelize);
 db.expense = require("./Expense.js")(sequelize, Sequelize);
 db.limit = require("./Limit.js")(sequelize, Sequelize);
 db.type = require("./Type.js")(sequelize, Sequelize);
-db.role = require("./Role")(sequelize, Sequelize);
 
 //Relations
 db.user.hasOne(db.limit, {
 	foreignKey: "userId"
 });
-db.user.hasOne(db.role, {
-	foreignKey: "role_id"
-});
 
-db.role.belongsTo(db.user);
 db.limit.belongsTo(db.user);
 
 db.user.hasMany(db.expense);

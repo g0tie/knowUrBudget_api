@@ -12,13 +12,6 @@ const db = require("./app/models");
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded( {extended:true} ));
-app.use(
-	cookieSession({
-		name: "auth-session",
-		secret: require("./app/config/auth").secret,
-		httpOnly: true
-	})
-);
 
 //router config
 app.use("/api/auth", authRouter);
