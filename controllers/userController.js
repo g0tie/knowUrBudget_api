@@ -11,11 +11,13 @@ const { Op } = require("sequelize");
 
 exports.getDatas = async (req, res) => {
     try {
-        const user = await User.findOne({id: req.userId, include: [
+        const user = await User.findOne({
+            attributes: { exclude: ['password'] },
+            where: { id: req.userId }, 
+            include: [
             {model: Expense},
             {model: Limit}
         ]});
-
         return res.status(200).send(user);
         
     } catch (e) {
