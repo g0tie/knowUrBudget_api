@@ -59,7 +59,7 @@ exports.addExpense = async (req, res) => {
 
         if (!expenses) return res.status(400).send({message: "Error, could not add expense"});
 
-        return res.status(200).send({message: "Expense added"});
+        return res.status(200).send({message: "Expense added", value: expenses.id});
         
     } catch (e) {
         return res.status(500).send({message: `Error has occured ${e}`});
