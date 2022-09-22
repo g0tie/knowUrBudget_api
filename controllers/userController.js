@@ -18,10 +18,10 @@ exports.getDatas = async (req, res) => {
             {model: Expense},
             {model: Limit}
         ]});
-        return res.status(200).send(user);
+        return res.status(200).json({user, csrf: req.session.csrf});
         
     } catch (e) {
-        return res.status(500).send({message: e});
+        return res.status(500).json({message: e});
     }
 }
 
@@ -37,10 +37,10 @@ exports.getExpenses = async (req, res) => {
             limit: 10
         });
 
-        return res.status(200).send({expenses});
+        return res.status(200).json({expenses, csrf:req.session.csrf });
 
     } catch (e) {
-        return res.status(500).send({message: `Server error occurred`});
+        return res.status(500).json({message: `Server error occurred`});
     }
 }
 
@@ -57,12 +57,12 @@ exports.addExpense = async (req, res) => {
         const type = await Type.findOne({id: req.body.typeId});
         await expenses.setType(type);
 
-        if (!expenses) return res.status(400).send({message: "Error, could not add expense"});
+        if (!expenses) return res.status(400).json({message: "Error, could not add expense"});
 
-        return res.status(200).send({message: "Expense added", value: expenses.id});
+        return res.status(200).json({message: "Expense added", value: expenses.id, csrf:req.session.csrf});
         
     } catch (e) {
-        return res.status(500).send({message: `Error has occured ${e}`});
+        return res.status(500).json({message: `Error has occured ${e}`});
     }
 }
 
@@ -72,10 +72,10 @@ exports.deleteExpense = async (req, res) => {
         const expense = await Expense.findOne({id: req.body.expenseId, userId});
         let success = await expense.destroy();
 
-        if (success) return res.status(200).send({message: "Expense deleted"});
+        if (success) return res.status(200).json({message: "Expense deleted",  csrf:req.session.csrf});
 
     } catch(e) {
-      return res.status(200).send({message: "Error cannot delete"});
+      return res.status(200).json({message: "Error cannot delete"});
 
     }
 }
@@ -88,11 +88,11 @@ exports.updateExpense = async (req, res) => {
         await expense.set(req.body);
         await expense.save();
 
-        if (expense) return res.status(200).send({message: "Expense updated"});
+        if (expense) return res.status(200).json({message: "Expense updated", csrf:req.session.csrf});
 
 
     } catch(e) {
-      return res.status(200).send({message: "Error cannot update"});
+      return res.status(200).json({message: "Error cannot update"});
         
     }
 }
@@ -107,12 +107,12 @@ exports.getLimit = async (req, res) => {
             }
         });
 
-        !limit && res.send({message:"No limit found for user"});
+        !limit && res.json({message:"No limit found for user"});
 
-        return res.status(200).send({message: "success" , limit});
+        return res.status(200).json({message: "success" , limit,  csrf:req.session.csrf});
 
     } catch (e) {
-        return res.status(500).send({message: `Error has occured ${e}`});
+        return res.status(500).json({message: `Error has occured ${e}`});
     }
 }
 
@@ -121,7 +121,7 @@ exports.setLimit = async (req, res) => {
         const newLimit = await parseInt( req.body.limit );
         const userId = req.userId;
 
-        if (!newLimit && Number.isInteger(newLimit) ) return res.status(400).send({message: "Cannot update limit"});
+        if (!newLimit && Number.isInteger(newLimit) ) return res.status(400).json({message: "Cannot update limit"});
 
         
         const limit = await Limit.findOne({
@@ -137,33 +137,15 @@ exports.setLimit = async (req, res) => {
             const user = await User.findOne( {id: userId });
             await createLimit.setUser(user);
 
-            return res.status(200).send({message: "Limit created"});
+            return res.status(200).json({message: "Limit created",  csrf:req.session.csrf});
         } else {
 
             limit.amount = await newLimit;
             await limit.save();
-            return res.status(200).send({message: "Limit updated"});
+            return res.status(200).json({message: "Limit updated",  csrf:req.session.csrf});
         }
 
     } catch (e) {
-        return res.status(500).send({message: `Error has occured ${e}`});
+        return res.status(500).json({message: `Error has occured ${e}`});
     }
 }
-
-exports.renew = async (req, res) => {
-    try {
-        const userId = req.userId;
-        const token = await jwt.sign({id: userId, }, config.secret, { expiresIn: "7d" });
-
-        return res.status(200).send({
-            id: user.id,
-            username: user.username,
-            email: user.email,
-            token
-        });
-        
-    } catch (e) {
-        return res.status(500).send({message: e});
-    }
-}
-
