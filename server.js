@@ -9,6 +9,23 @@ const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
 require('dotenv').config();
 
+const corsOptions = {
+	//To allow requests from client
+	origin: [
+	  "http://localhost:3000",
+	  "http://127.0.0.1",
+	],
+	credentials: true,
+	exposedHeaders: ["set-cookie"],
+};
+
+  
+//middlewares
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(express.urlencoded( {extended:true} ));
+app.use(cookieParser());
+
 //config database
 const db = require("./app/models");
 
@@ -22,12 +39,6 @@ app.use(cookieSession({
 	secure: process.env.NODE_ENV === 'production',// cookie only sent on HTTPS
 	httpOnly: true                                // cookie is not available to JavaScript (client)
 }));
-
-//middlewares
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded( {extended:true} ));
-app.use(cookieParser());
 
 //router config
 app.use("/api/auth", authRouter);
