@@ -10,7 +10,11 @@ const cookieParser = require("cookie-parser");
 require('dotenv').config();
 
 const corsOptions = {
-	"origin": "*",
+	"origin": [
+		"localhost:3000",
+		"https://knowurbudget-app.vercel.app/",
+		"knowurbudget-cy3d1g7mr-g0tie.vercel.app"
+	],
 	"methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
 	"preflightContinue": false,
 	"optionsSuccessStatus": 204,
