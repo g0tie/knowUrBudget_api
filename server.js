@@ -18,6 +18,7 @@ const corsOptions = {
 	  "https://knowurbudget-app.vercel.app/"
 
 	],
+	methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
 	credentials: true,
 	exposedHeaders: ["set-cookie"],
 };
