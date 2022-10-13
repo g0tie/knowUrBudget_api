@@ -14,6 +14,9 @@ const corsOptions = {
 	origin: [
 	  "http://localhost:3000",
 	  "http://127.0.0.1",
+	  "https://knowurbudget-cy3d1g7mr-g0tie.vercel.app/",
+	  "https://knowurbudget-app.vercel.app/"
+
 	],
 	credentials: true,
 	exposedHeaders: ["set-cookie"],
