@@ -9,22 +9,19 @@ const rateLimit = require("express-rate-limit");
 const cookieParser = require("cookie-parser");
 require('dotenv').config();
 
-// const corsOptions = {
-// 	"origin": [
-// 		"localhost:3000",
-// 		"https://knowurbudget-app.vercel.app/",
-// 		"knowurbudget-cy3d1g7mr-g0tie.vercel.app"
-// 	],
-// 	"methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-// 	"preflightContinue": false,
-// 	"optionsSuccessStatus": 204,
-// 	credentials: true,
-// 	exposedHeaders: ["set-cookie"],
-// };
-
+const corsOptions = {
+	"origin": [
+		"http://localhost:3000",
+		"https://knowurbudget-app.vercel.app/",
+		"https://knowurbudget-cy3d1g7mr-g0tie.vercel.app",
+		"http://localhost"
+	],
+	"methods": "OPTIONS,GET,HEAD,PUT,PATCH,POST,DELETE",
+	credentials: true,
+};
 
 //middlewares
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded( {extended:true} ));
 app.use(cookieParser());
