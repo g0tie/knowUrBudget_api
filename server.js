@@ -11,13 +11,14 @@ require('dotenv').config();
 
 const corsOptions = {
 	"origin": [
-		"localhost:3000",
+		"http://localhost:3000",
 		"http://localhost",
 		"https://knowurbudget-app.vercel.app/",
 		"https://knowurbudget-cy3d1g7mr-g0tie.vercel.app",
 	],
 	"methods": "OPTIONS,GET,HEAD,PUT,PATCH,POST,DELETE",
-	credentials: true,
+	preflightContinue: true,
+	credentials: true
 };
 
 //middlewares

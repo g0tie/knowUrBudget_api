@@ -5,11 +5,17 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const serialize = require("cookie").serialize;
 var { randomBytes } = require('crypto');
+const { body, validationResult } = require('express-validator');
 
 const Limit = db.limit;
 
 exports.signup = async (req, res) => {
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+
         const user = await User.create({
             username: req.body.username,
             email: req.body.email,
@@ -54,6 +60,12 @@ exports.signup = async (req, res) => {
 
 exports.signin = async (req, res) => {
     try {
+        
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+
         const user = await User.findOne({where: {
         
                 email : req.body.email
@@ -61,11 +73,11 @@ exports.signin = async (req, res) => {
            
         });
 
-        if ( !user)  return res.status(404).json({message: "User not found"}); 
+        if ( !user)  return res.status(404).json({message: "Utilisateyur inexistant"}); 
 
         const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
 
-        if (!passwordIsValid) return res.status(401).json({message: "Password is invalid"});
+        if (!passwordIsValid) return res.status(401).json({message: "Mot de passe invalide"});
     
         const token = jwt.sign({id: user.id, }, config.secret, { expiresIn: "7d" });
 
