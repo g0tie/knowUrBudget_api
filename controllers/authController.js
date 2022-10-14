@@ -73,7 +73,7 @@ exports.signin = async (req, res) => {
            
         });
 
-        if ( !user)  return res.status(404).json({message: "Utilisateyur inexistant"}); 
+        if ( !user)  return res.status(404).json({message: "Utilisateur inexistant"}); 
 
         const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
 
@@ -105,7 +105,7 @@ exports.signin = async (req, res) => {
 
     } catch (e) {
         console.error(e);
-        return res.status(500).json({message: "Invalid credentials"});
+        return res.status(500).json({message: "Mot de passe invalide"});
     }
 }
 
@@ -117,7 +117,7 @@ exports.signout = async (req, res) => {
     if (!jwt) {
         return res.status(401).json({
           status: 'error',
-          error: 'Unauthorized',
+          error: 'Accès non autorisée',
         });
     }
     
