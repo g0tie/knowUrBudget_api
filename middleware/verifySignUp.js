@@ -5,7 +5,7 @@ const { Op } = require("sequelize");
 checkEmail = async (req, res, next) =>
 {
 	try {
-		if (await !req.body.email) return res.status('400').send({message: "Email required"});
+		if (await !req.body.email) return res.status('400').send({message: "Email requis"});
 		let user = await User.findOne({ 
 			where: {
 				email: {
@@ -13,12 +13,12 @@ checkEmail = async (req, res, next) =>
 				} 
 			}
 		});
-		if (user) return res.status(409).send({message: "User already exists"});
+		if (user) return res.status(409).send({message: "L'utilisateur existe déjà"});
 		next();
 
 	} catch (e) {
 		console.error(`error occured: ${e}`);
-		return res.status(500).send({ message: "Cannot validate email"});
+		return res.status(500).send({ message: "Erreur serveur"});
 	}
 }
 
@@ -33,12 +33,12 @@ checkUsername = async (req, res, next) =>
 				} 
 			}
 		});
-		if (user) return res.status(400).send({message: "User already exists"});
+		if (user) return res.status(400).send({message: "L'utilisateur existe déjà"});
 		next();
 
 	} catch (e) {
 	
-		return res.status(500).send({ message: "Cannot validate username"});
+		return res.status(500).send({ message: "Erreur serveur"});
 	}
 }
 

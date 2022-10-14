@@ -8,7 +8,7 @@ router.post(
     [
         verifySignUp.checkEmail,
         verifySignUp.checkUsername,
-        body('username', 'Veuillez entrez un nom d\'utilisateur plus long').exists().isLength({min:5}),
+        body('username', 'Veuillez entrez un nom d\'utilisateur plus long').exists().isLength({min:3}),
         body('email', 'Email invalide').exists().isEmail(),
         body('password', 'Le mot de passe doit être de minimum 8 caractères').isLength({ min: 8 }),
     ], 
