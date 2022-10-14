@@ -14,15 +14,11 @@ const corsOptions = {
 		"localhost:3000",
 		"http://localhost",
 		"https://knowurbudget-app.vercel.app/",
-		"knowurbudget-cy3d1g7mr-g0tie.vercel.app"
+		"https://knowurbudget-cy3d1g7mr-g0tie.vercel.app",
 	],
-	"methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
-	preflightContinue: true,
-	"optionsSuccessStatus": 204,
+	"methods": "OPTIONS,GET,HEAD,PUT,PATCH,POST,DELETE",
 	credentials: true,
-	exposedHeaders: ["set-cookie"],
 };
-
 
 //middlewares
 app.use(cors(corsOptions));

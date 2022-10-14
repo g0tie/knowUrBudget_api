@@ -42,7 +42,11 @@ exports.signup = async (req, res) => {
 
         await  res.setHeader('Set-Cookie', serialized);
 
-        if (user) res.status(200).json({message: "Registration successful"});
+        if (req.session.csrf === undefined) {
+            req.session.csrf = randomBytes(100).toString('base64'); // convert random data to a string
+        }
+
+        if (user) res.status(200).json({message: "Registration successful", csrf: req.session.csrf, id:user.id});
     } catch (e) {
         return res.status(500).json({message: e.message});
     }

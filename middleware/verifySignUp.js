@@ -13,7 +13,7 @@ checkEmail = async (req, res, next) =>
 				} 
 			}
 		});
-		if (user) return res.status(400).send({message: "User already exists"});
+		if (user) return res.status(409).send({message: "User already exists"});
 		next();
 
 	} catch (e) {
