@@ -15,7 +15,7 @@ exports.getDatas = async (req, res) => {
             attributes: { exclude: ['password'] },
             where: { id: req.userId }, 
             include: [
-            {model: Expense},
+            {model: Expense, include: [ {model: Type }]},
             {model: Limit}
         ]});
         return res.status(200).json({user, csrf: req.session.csrf});
@@ -27,8 +27,8 @@ exports.getDatas = async (req, res) => {
 
 exports.setDatas = async (req, res) => {
     try {
-        const userId = req.userId;
-        const data = req.body;
+        const userId = await req.userId;
+        const data = await req.body.data;
         
         await Expense.destroy({
             where: {
@@ -54,7 +54,7 @@ exports.setDatas = async (req, res) => {
             }
         });
 
-        limit.amount = await data.limit;
+        limit.amount = await data.limit.value;
         await limit.save();
 
         return res.status(200).json({message: "Synchronisation réussie", csrf: req.session.csrf});
