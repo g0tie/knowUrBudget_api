@@ -37,6 +37,7 @@ exports.setDatas = async (req, res) => {
             truncate: true
         });
 
+        await console.log(req.body.data)
         await data.expenses.forEach(async expense => {
             let newExpense = await Expense.create({
                 userId,
@@ -44,7 +45,7 @@ exports.setDatas = async (req, res) => {
                 amount: expense.amount,
                 date: expense.date
             });
-            const type = await Type.findOne({id: expense.typeid});
+            const type = await Type.findOne({where: {id: expense.typeid}});
             await newExpense.setType(type);
         });
 
@@ -93,7 +94,7 @@ exports.addExpense = async (req, res) => {
             amount: req.body.amount,
             date: date.toISOString()
         });
-        const type = await Type.findOne({id: req.body.typeId});
+        const type = await Type.findOne({whre: {id: req.body.typeId}});
         await expenses.setType(type);
 
         if (!expenses) return res.status(400).json({message: "Error, could not add expense"});
@@ -122,10 +123,13 @@ exports.deleteExpense = async (req, res) => {
 exports.updateExpense = async (req, res) => {
     try {
         const userId = req.userId;
-        const expense = await Expense.findOne({id: req.body.id, userId});
-
-        await expense.set(req.body);
+        const expense = await Expense.findOne({ where: { id: req.body.expense.remoteId, userId},  include: [{model: Type}]});
+        
+        await expense.set(req.body.expense);
         await expense.save();
+        
+        const type = await Type.findOne({where: {id:req.body.expense.typeid}});
+        await expense.setType(type);
 
         if (expense) return res.status(200).json({message: "Expense updated", csrf:req.session.csrf});
 
