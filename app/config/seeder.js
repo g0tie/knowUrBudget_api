@@ -19,18 +19,16 @@ async function init() {
     try {
         await db.sequelize.sync({ force: true });
         await db.type.bulkCreate([
-            { name: "Alimentaire" },
-            { name: "Vêtements" },
-            { name: "Décorations" },
-            { name: "Meuble" },
-            { name: "Hygiène" },
-            { name: "Santé" },
-            { name: "Jardin" },
-            { name: "Bricolage" },
-            { name: "Scolaire" },
-            { name: "Divertissement" },
-           
-        
+            {name:"Alimentaire"},
+            {name:"Vehicule"},
+            {name:"Divertissement"},
+            {name:"Santé"},
+            {name:"Vêtements"},
+            {name:"Sport"},
+            {name:"Shopping"},
+            {name:"Impôts"},
+            {name:"Esthétique / soins"},
+            {name:"Animaux"},
         ]);
      
         await db.roles.bulkCreate([

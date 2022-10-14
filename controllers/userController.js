@@ -83,7 +83,7 @@ exports.deleteExpense = async (req, res) => {
 exports.updateExpense = async (req, res) => {
     try {
         const userId = req.userId;
-        const expense = await Expense.findOne({id: req.body.expenseId, userId});
+        const expense = await Expense.findOne({id: req.body.id, userId});
 
         await expense.set(req.body);
         await expense.save();
