@@ -15,5 +15,6 @@ router.get('/limit', controller.getLimit);
 router.post('/limit', controller.setLimit);
 
 router.get('/datas', controller.getDatas);
+router.post('/datas', controller.setDatas);
 
 module.exports = router;

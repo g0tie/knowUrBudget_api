@@ -25,6 +25,45 @@ exports.getDatas = async (req, res) => {
     }
 }
 
+exports.setDatas = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const data = req.body;
+        
+        await Expense.destroy({
+            where: {
+                userId,
+            },
+            truncate: true
+        });
+
+        await data.expenses.forEach(async expense => {
+            let newExpense = await Expense.create({
+                userId,
+                name: expense.name,
+                amount: expense.amount,
+                date: expense.date
+            });
+            const type = await Type.findOne({id: expense.typeid});
+            await newExpense.setType(type);
+        });
+
+        const limit = await Limit.findOne({
+            where : {
+                userId
+            }
+        });
+
+        limit.amount = await data.limit;
+        await limit.save();
+
+        return res.status(200).json({message: "Synchronisation réussie", csrf: req.session.csrf});
+        
+    } catch (e) {
+        return res.status(500).json({message: e});
+    }
+}
+
 exports.getExpenses = async (req, res) => {
     try {
         const typeId = req.body.typeId || false;

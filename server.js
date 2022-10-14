@@ -17,7 +17,7 @@ const corsOptions = {
 		"https://knowurbudget-cy3d1g7mr-g0tie.vercel.app",
 	],
 	"methods": "OPTIONS,GET,HEAD,PUT,PATCH,POST,DELETE",
-	preflightContinue: true,
+	preflightContinue: false,
 	credentials: true
 };
 
