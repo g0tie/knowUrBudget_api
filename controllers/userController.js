@@ -29,7 +29,7 @@ exports.setDatas = async (req, res) => {
     try {
         const userId = await req.userId;
         const data = await req.body.data;
-        
+
         await Expense.destroy({
             where: {
                 userId,
@@ -37,15 +37,15 @@ exports.setDatas = async (req, res) => {
             truncate: true
         });
 
-        await console.log(req.body.data)
         await data.expenses.forEach(async expense => {
             let newExpense = await Expense.create({
                 userId,
+                typeId: expense.typeid ?? expense.typeId,
                 name: expense.name,
                 amount: expense.amount,
                 date: expense.date
             });
-            const type = await Type.findOne({where: {id: expense.typeid}});
+            const type = await Type.findOne({where: {id: expense.typeId ?? expense.typeid}});
             await newExpense.setType(type);
         });
 
@@ -58,7 +58,15 @@ exports.setDatas = async (req, res) => {
         limit.amount = await data.limit.value;
         await limit.save();
 
-        return res.status(200).json({message: "Synchronisation réussie", csrf: req.session.csrf});
+        const user = await User.findOne({
+            attributes: { exclude: ['password'] },
+            where: { id: req.userId }, 
+            include: [
+            {model: Expense},
+            {model: Limit}
+        ]});
+
+        return res.status(200).json({message: "Synchronisation réussie", user, csrf: req.session.csrf});
         
     } catch (e) {
         return res.status(500).json({message: e});
