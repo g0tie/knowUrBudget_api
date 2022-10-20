@@ -29,13 +29,13 @@ app.use(cookieParser());
 
 //config database
 const db = require("./app/models");
-// app.set('trust proxy', 1);
+app.set('trust proxy', 1);
 
 //FOR CSRF
 app.use(cookieSession({
 	secret: 'sdfd5f47ds8f79df412ds14f5d4fù^dsmf*ùdsl^fmùdsofçè_dçs-fè(-dè_fkdsbfn/.#',
     sameSite: 'none',
-    secure: 'true',
+    secure: true,
     httpOnly: true,                          // cookie is not available to JavaScript (client)
 }));
 

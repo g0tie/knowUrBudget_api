@@ -123,8 +123,8 @@ exports.signout = async (req, res) => {
     
     const serialized = serialize('token', null, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        secure: true,
+        sameSite: 'none',
         maxAge: -1,
         path: '/',
     });
