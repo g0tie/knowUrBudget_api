@@ -13,12 +13,12 @@ const corsOptions = {
 	"origin": [
 		"http://localhost:3000",
 		"http://localhost",
-		"https://knowurbudget-app.vercel.app/",
+		"https://knowurbudget-app.vercel.app",
 		"https://knowurbudget-cy3d1g7mr-g0tie.vercel.app",
 	],
 	"methods": "OPTIONS,GET,HEAD,PUT,PATCH,POST,DELETE",
 	preflightContinue: false,
-	credentials: true
+	credentials: true,
 };
 
 //middlewares
@@ -29,16 +29,14 @@ app.use(cookieParser());
 
 //config database
 const db = require("./app/models");
+// app.set('trust proxy', 1);
 
 //FOR CSRF
 app.use(cookieSession({
-	name: 'session',                              // name of the cookie
-	secret: 'MAKE_THIS_SECRET_SECURE',            // key to encode session
-	maxAge: 24 * 60 * 60 * 1000,                  // cookie's lifespan
-	sameSite: 'lax',                              // controls when cookies are sent
-	path: '/',                                    // explicitly set this for security purposes
-	secure: process.env.NODE_ENV === 'production',// cookie only sent on HTTPS
-	httpOnly: true                                // cookie is not available to JavaScript (client)
+	secret: 'sdfd5f47ds8f79df412ds14f5d4fù^dsmf*ùdsl^fmùdsofçè_dçs-fè(-dè_fkdsbfn/.#',
+    sameSite: 'none',
+    secure: 'true',
+    httpOnly: true,                          // cookie is not available to JavaScript (client)
 }));
 
 //router config

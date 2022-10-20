@@ -10,7 +10,7 @@ router.post(
         verifySignUp.checkUsername,
         body('username', 'Veuillez entrez un nom d\'utilisateur plus long').exists().isLength({min:3}),
         body('email', 'Email invalide').exists().isEmail(),
-        body('password', 'Le mot de passe doit être de minimum 8 caractères').isLength({ min: 8 }),
+        body('password', 'Le mot de passe doit être de minimum 12 caractères').isLength({ min: 12 }),
     ], 
     controller.signup
 );
@@ -18,7 +18,7 @@ router.post(
     '/signin', 
     
         body('email', 'Email invalide').exists().isEmail(),
-        body('password', 'Le mot de passe doit être de minimum 8 caractères').isLength({ min: 8 })
+        body('password', 'Le mot de passe doit être de minimum 12 caractères').isLength({ min: 12 })
     ,
     controller.signin
 );

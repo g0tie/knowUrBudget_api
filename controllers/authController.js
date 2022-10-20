@@ -40,8 +40,8 @@ exports.signup = async (req, res) => {
 
         const serialized = await serialize('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            secure: true,
+            sameSite: 'none',
             maxAge: 60 * 60 * 24 * 30,
             path: '/',
         });
@@ -83,8 +83,8 @@ exports.signin = async (req, res) => {
 
         const serialized = await serialize('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            secure: true,
+            sameSite: 'none',
             maxAge: 60 * 60 * 24 * 30,
             path: '/',
         });
