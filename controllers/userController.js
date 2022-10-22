@@ -102,7 +102,7 @@ exports.addExpense = async (req, res) => {
             amount: req.body.amount,
             date: date.toISOString()
         });
-        const type = await Type.findOne({whre: {id: req.body.typeId}});
+        const type = await Type.findOne({whre: {id: req.body.typeid ?? req.body.typeId }});
         await expenses.setType(type);
 
         if (!expenses) return res.status(400).json({message: "Error, could not add expense"});
@@ -136,7 +136,7 @@ exports.updateExpense = async (req, res) => {
         await expense.set(req.body.expense);
         await expense.save();
         
-        const type = await Type.findOne({where: {id:req.body.expense.typeid}});
+        const type = await Type.findOne({where: {id:req.body.expense.typeid ?? req.body.typeId}});
         await expense.setType(type);
 
         if (expense) return res.status(200).json({message: "Expense updated", csrf:req.session.csrf});
